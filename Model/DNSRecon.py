@@ -24,7 +24,7 @@ class DNSRecon:
             return self.__record_A
 
         except dns.resolver.NXDOMAIN:
-            raise dns.resolver.NXDOMAIN('El nombre de la consulta DNS no existe: ' + self.__domain)
+            raise dns.resolver.NXDOMAIN('El nombre de la consulta DNS no existe para el dominio: ' + self.__domain)
         except dns.resolver.NoAnswer:
             raise dns.resolver.NoAnswer('La respuesta de DNS no contiene una respuesta a la pregunta: '
                                         + self.__domain + ':' + 'IPv4')
@@ -38,7 +38,7 @@ class DNSRecon:
             return self.__record_MX
 
         except dns.resolver.NXDOMAIN:
-            raise dns.resolver.NXDOMAIN('El nombre de la consulta DNS no existe: ' + self.__domain)
+            raise dns.resolver.NXDOMAIN('El nombre de la consulta DNS no existe para el dominio: ' + self.__domain)
         except dns.resolver.NoAnswer:
             raise dns.resolver.NoAnswer('La respuesta de DNS no contiene una respuesta a la pregunta: '
                                         + self.__domain + ':' + self.__type_record)
@@ -57,7 +57,7 @@ class DNSRecon:
             return self.__record_NS
 
         except dns.resolver.NXDOMAIN:
-            raise dns.resolver.NXDOMAIN('El nombre de la consulta DNS no existe: ' + self.__domain)
+            raise dns.resolver.NXDOMAIN('El nombre de la consulta DNS no existe para el dominio para el dominio: ' + self.__domain)
         except dns.resolver.NoAnswer:
             raise dns.resolver.NoAnswer('La respuesta de DNS no contiene una respuesta a la pregunta: '
                                         + self.__domain + ':' + self.__type_record)
@@ -65,26 +65,29 @@ class DNSRecon:
     def get_record_xfr(self):
         self.__record_axfr = []
 
-        for record_ns in self.__record_NS:
-            try:
-                ip = record_ns[-1:][0]
-                zone = dns.zone.from_xfr(dns.query.xfr(ip, self.__domain))
-                self.__record_axfr.append(zone)
+        try:
+            for record_ns in self.__record_NS:
+                try:
+                    ip = record_ns[-1:][0]
+                    zone = dns.zone.from_xfr(dns.query.xfr(ip, self.__domain))
+                    self.__record_axfr.append(zone)
 
-                for z in zone.iterate_rdatas(1):
-                    z_transfer = [domain, servicio, ttl, ip] = self.__domain, str(z[0]), str(z[1]), str(z[2])
-                    self.__record_axfr.append(z_transfer)
+                    for z in zone.iterate_rdatas(1):
+                        z_transfer = [domain, servicio, ttl, ip] = self.__domain, str(z[0]), str(z[1]), str(z[2])
+                        self.__record_axfr.append(z_transfer)
 
-            except dns.query.TransferError:
-                self.__record_axfr.append('El servidor NS denego la solicitud de zona de transferencia: '
-                                          + record_ns[3])
-                continue
-            except dns.exception.FormError:
-                self.__record_axfr.append('El servidor NS denego la solicitud de zona de transferencia: '
-                                          + record_ns[3])
-                continue
-            except EOFError:
-                self.__record_axfr.append('Error de consulta de registro AXFR: paquete dañado: ' + record_ns[3])
+                except dns.query.TransferError:
+                    self.__record_axfr.append('El servidor NS denego la solicitud de zona de transferencia: '
+                                              + record_ns[3])
+                    continue
+                except dns.exception.FormError:
+                    self.__record_axfr.append('El servidor NS denego la solicitud de zona de transferencia: '
+                                              + record_ns[3])
+                    continue
+                except EOFError:
+                    self.__record_axfr.append('Error de consulta de registro AXFR: paquete dañado: ' + record_ns[3])
+        except TypeError:
+            raise TypeError('No existen registro para realizar zona de transferencia')
         return self.__record_axfr
 
     def brute_force(self):

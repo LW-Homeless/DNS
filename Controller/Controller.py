@@ -2,6 +2,7 @@ from Model.DNSRecon import DNSRecon
 from colorama import Fore, init
 from tabulate import tabulate
 import dns.resolver
+import os
 
 
 class Controller:
@@ -24,9 +25,13 @@ class Controller:
 
     def controller(self):
 
-        print(Fore.RED + self.__banner)
+        if os.name =="posix":
+            os.system("clear")
+        elif os.name == "ce" or os.name == "nt" or os.name == "dos":
+            os.system("cls")
 
         while True:
+            print(Fore.RED + self.__banner)
             print(Fore.RED + '', end='')
             self.__domain = input('INGRESE DOMINIO A CONSULTAR > ')
             print('\n')
@@ -71,30 +76,37 @@ class Controller:
                 print(ex.__str__(), end='\n\n')
 
             # Perform transfer zone
-            print(Fore.RED + 'REGISTROS OBTENIDOS ZONA TRANFERENCIA (AXFR)')
-            print('=' * 60)
+            try:
+                print(Fore.RED + 'REGISTROS OBTENIDOS ZONA TRANFERENCIA (AXFR)')
+                print('=' * 60)
 
-            for xfr in dns_records.get_record_xfr():
-                print(xfr)
-            print('\n')
-
-            # Execute brute force
-            while True:
-                print(Fore.BLUE + '', end='')
-                question = input('[?] ¿Desea realizar fuerza bruta al dominio, para el descubrimientos '
-                                 'de servicios. Esto puede tomar varios minutos (y/n)? ')
+                for xfr in dns_records.get_record_xfr():
+                    print(xfr)
                 print('\n')
 
-                if question == 'Y' or question == 'y':
-                    print(Fore.RED + 'REGISTROS OBTENIDOS (FUERZA BRUTA)')
-                    print('='*60)
-                    for servicio in dns_records.brute_force():
-                        print(servicio[0], servicio[1], servicio[2], servicio[3], servicio[4])
-                    break
-                elif question == 'N' or question == 'n':
-                    break
-                else:
-                    print(Fore.RED + '[X] Opcion invalida digite "y" para ejecutar fuerza bruta o "n" de lo contrario',
-                          end='\n\n')
+                self.__get_brute_force(dns_records)
 
-            print('\n\n')
+            except TypeError as ex:
+                print(ex.__str__(), end='\n\n')
+
+    # Execute brute force
+
+    def __get_brute_force(self, obj_dns):
+        while True:
+            print(Fore.BLUE + '', end='')
+            question = input('[?] ¿Desea realizar fuerza bruta al dominio, para el descubrimientos '
+                             'de servicios. Esto puede tomar varios minutos (y/n)? ')
+            print('\n')
+
+            if question == 'Y' or question == 'y':
+                print(Fore.RED + 'REGISTROS OBTENIDOS (FUERZA BRUTA)')
+                print('='*60)
+                for servicio in obj_dns.brute_force():
+                    print(servicio[0], servicio[1], servicio[2], servicio[3], servicio[4])
+                break
+            elif question == 'N' or question == 'n':
+                break
+            else:
+                print(Fore.RED + '[X] Opcion invalida digite "y" para ejecutar fuerza bruta o "n" de lo contrario',
+                      end='\n\n')
+        print('\n\n')
