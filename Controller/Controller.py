@@ -30,8 +30,9 @@ class Controller:
         elif os.name == "ce" or os.name == "nt" or os.name == "dos":
             os.system("cls")
 
+        print(Fore.RED + self.__banner)
+
         while True:
-            print(Fore.RED + self.__banner)
             print(Fore.RED + '', end='')
             self.__domain = input('INGRESE DOMINIO A CONSULTAR > ')
             print('\n')
