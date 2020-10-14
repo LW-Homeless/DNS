@@ -25,4 +25,13 @@ python Main.py
 ```
 - Por último, sigue las intruciones que te solicitará el programa.
 
-## Video Demostración
+## Imagenes Demostración
+
+Instalación de dependecias.
+![alt text](https://github.com/LW-Homeless/DNS/blob/main/img/dependencias.PNG)
+
+Ejecución del programa
+![alt text](https://github.com/LW-Homeless/DNS/blob/main/img/ejecucion.PNG)
+
+Resultados de la ejecución
+![alt text](https://github.com/LW-Homeless/DNS/blob/main/img/registro.PNG)
