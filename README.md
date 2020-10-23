@@ -1,5 +1,5 @@
 # DNS
-DNSRecon herramienta para la optencion de registros DNS tales como, registros IPv4 (A), registros Mail Exchange (MX), registro Name Server (NS). Además, automatiza el proceso de transferencia de zonas y opcionalmente la ejecución de fuerza bruta, para el descubrimiento de servicios.
+DNSRecon herramienta para la obtención de registros DNS tales como, registros IPv4 (A), registros Mail Exchange (MX), registro Name Server (NS). Además, automatiza el proceso de transferencia de zonas y opcionalmente la ejecución de fuerza bruta, para el descubrimiento de servicios.
 
 #Requisitos
 - Python 3.8.x o superior.
@@ -25,4 +25,13 @@ python Main.py
 ```
 - Por último, sigue las intruciones que te solicitará el programa.
 
-## Video Demostración
+## Imagenes Demostración
+
+Instalación de dependecias.
+![alt text](https://github.com/LW-Homeless/DNS/blob/main/img/dependencias.PNG)
+
+Ejecución del programa
+![alt text](https://github.com/LW-Homeless/DNS/blob/main/img/ejecucion.PNG)
+
+Resultados de la ejecución
+![alt text](https://github.com/LW-Homeless/DNS/blob/main/img/registro.PNG)
