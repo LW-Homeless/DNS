@@ -86,6 +86,12 @@ class DNSRecon:
                     continue
                 except EOFError:
                     self.__record_axfr.append('Error de consulta de registro AXFR: paquete dañado: ' + record_ns[3])
+                except dns.resolver.Timeout:
+                    self.__record_axfr.append('Se agoto el tiempo de espera de registro AXFR: ' + record_ns[3])
+                    continue
+                except TimeoutError:
+                    self.__record_axfr.append('Se agoto el tiempo de espera de registro AXFR: ' + record_ns[3])
+                    continue
         except TypeError:
             raise TypeError('No existen registro para realizar zona de transferencia')
         return self.__record_axfr
